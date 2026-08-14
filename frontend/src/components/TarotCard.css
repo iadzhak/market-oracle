@@ -3,7 +3,12 @@
     height: 180px;
     perspective: 1000px;
     cursor: pointer;
-    margin: 10px;
+    transition: opacity 0.3s, filter 0.3s;
+}
+
+.dimmed .tarot-card:not(.selected) {
+    opacity: 0.4;
+    filter: grayscale(50%);
 }
 
 .card-inner {
@@ -44,8 +49,73 @@
     transform: rotateY(180deg);
 }
 
-.tarot-card.flipped .card-inner {
+.card-back p {
+    text-align: center;
+    margin: 10px 12px;
+    padding: 0 4px;
+}
+
+.card-large {
+    width: 300px;
+    height: 450px;
+}
+
+.card-front-large,
+.card-back-large {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+}
+
+.card-front-large {
+    background: linear-gradient(145deg, #5a3f37, #2c1b18);
+    color: white;
+    font-size: 28px;
+}
+
+.card-back-large {
+    background: linear-gradient(145deg, #e6d5b8, #d4c29a);
+    color: #333;
     transform: rotateY(180deg);
+    padding: 20px;
+}
+
+.card-back-large h2 {
+    font-size: 24px;
+    margin-bottom: 16px;
+}
+
+.card-back-large p {
+    font-size: 20px;
+    text-align: center;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.card-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 @keyframes spinAndWobble {
