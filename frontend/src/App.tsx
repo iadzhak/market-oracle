@@ -1,4 +1,5 @@
 import TarotCard from "./components/TarotCard.tsx";
+import AlertCard from "./components/AlertCard.tsx";
 import './App.css';
 
 const deck = [
@@ -18,6 +19,11 @@ function App() {
         <div className="app">
             <h1>🔮 Крипто Оракул</h1>
             <div className="deck">
+                <AlertCard card={{
+                    id: 0,
+                    name: '⚠️ Предупреждение ⚠️',
+                    meaning: 'Cервис носит демонстрационный характер. Не является финансовой рекомендацией, не гарантирует доходность и не предназначен для проведения реальных финансовых операций.'
+                }} />
                 {deck.map((card) => (
                     <TarotCard key={card.id} card={card} />
                 ))}
