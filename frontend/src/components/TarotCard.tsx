@@ -4,20 +4,24 @@ import flipSound from '../assets/flip.mp3'
 
 interface TarotCardProps {
     card: { id: number; name: string; meaning: string };
-    selected: boolean;
-    onSelect: (id: number) => void;
 }
 
-export default function TarotCard({ card, selected, onSelect }: TarotCardProps) {
+export default function TarotCard({ card }: TarotCardProps) {
     const [isAnimating, setIsAnimating] = useState(false);
     const [isRevealed, setIsRevealed] = useState(false);
+    const [isOverlayVisible, setIsOverlayVisible] = useState(false);
     const audioRef = useRef(new Audio(flipSound));
 
     const handleClick = (e: React.MouseEvent) => {
         e.stopPropagation();
 
-        if (selected) {
-            onSelect(card.id);
+        if (isOverlayVisible) {
+            return;
+        }
+
+        // Если уже открыта — просто показываем оверлей снова
+        if (isRevealed && !isAnimating) {
+            setIsOverlayVisible(true);
             return;
         }
 
@@ -29,18 +33,22 @@ export default function TarotCard({ card, selected, onSelect }: TarotCardProps) 
 
         setIsAnimating(true);
 
-        // Завершаем анимацию через ~2 секунды
+        // Завершаем анимацию
         setTimeout(() => {
             setIsAnimating(false);
             setIsRevealed(true);
-            onSelect(card.id);
+            setIsOverlayVisible(true);
         }, 5000);
+    };
+
+    const handleOverlayClick = () => {
+        setIsOverlayVisible(false);
     };
 
     return (
         <>
             <div
-                className={`tarot-card ${isAnimating ? 'animating' : ''} ${isRevealed ? 'flipped' : ''} ${selected ? 'selected' : ''}`}
+                className={`tarot-card ${isAnimating ? 'animating' : ''} ${isRevealed ? 'flipped' : ''}`}
                 onClick={handleClick}
             >
                 <div className="card-inner">
@@ -56,8 +64,8 @@ export default function TarotCard({ card, selected, onSelect }: TarotCardProps) 
                 </div>
             </div>
 
-            {selected && (
-                <div className="card-overlay" onClick={() => onSelect(card.id)}>
+            {isOverlayVisible && (
+                <div className="card-overlay" onClick={handleOverlayClick}>
                     <div className="card-large">
                         <div className="card-inner">
                             <div className="card-spin-wrapper">
