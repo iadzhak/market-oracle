@@ -54,7 +54,8 @@
     border-radius: 15px;
     font-size: 18px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    overflow: hidden;
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 .card-front {
@@ -66,12 +67,14 @@
     background: linear-gradient(145deg, #e6d5b8, #d4c29a);
     color: #333;
     transform: rotateY(180deg);
+    overflow-y: auto;
 }
 
 .card-back p {
     text-align: center;
     margin: 10px 12px;
     padding: 0 4px;
+    word-wrap: break-word;
 }
 
 .card-large {
@@ -105,6 +108,9 @@
     background: linear-gradient(145deg, #e6d5b8, #d4c29a);
     color: #333;
     padding: 20px;
+    overflow-y: auto;
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 .card-back-large h2 {
@@ -117,6 +123,7 @@
     text-align: center;
     margin: 0;
     line-height: 1.5;
+    word-wrap: break-word;
 }
 
 .card-overlay {
