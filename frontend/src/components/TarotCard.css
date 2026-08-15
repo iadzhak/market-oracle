@@ -1,6 +1,6 @@
 .tarot-card {
-    width: 120px;
-    height: 180px;
+    width: 150px;
+    height: 220px;
     perspective: 1000px;
     cursor: pointer;
     transition: opacity 0.3s, filter 0.3s;

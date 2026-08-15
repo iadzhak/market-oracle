@@ -23,7 +23,7 @@ function App() {
 
     return (
         <div className="app">
-            <h1>🔮 Выбери свою карту крипты</h1>
+            <h1>🔮 Крипто Оракул</h1>
             <div className={`deck ${selectedId !== null ? 'dimmed' : ''}`}>
                 {deck.map((card) => (
                     <TarotCard
