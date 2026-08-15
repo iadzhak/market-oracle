@@ -34,7 +34,7 @@ export default function TarotCard({ card, selected, onSelect }: TarotCardProps) 
             setIsAnimating(false);
             setIsRevealed(true);
             onSelect(card.id);
-        }, 2000);
+        }, 5000);
     };
 
     return (
@@ -44,12 +44,14 @@ export default function TarotCard({ card, selected, onSelect }: TarotCardProps) 
                 onClick={handleClick}
             >
                 <div className="card-inner">
-                    <div className="card-front">
-                        <span>{card.name}</span>
-                    </div>
-                    <div className="card-back">
-                        <h3>{card.name}</h3>
-                        <p>{card.meaning}</p>
+                    <div className="card-spin-wrapper">
+                        <div className="card-front">
+                            <span>{card.name}</span>
+                        </div>
+                        <div className="card-back">
+                            <h3>{card.name}</h3>
+                            <p>{card.meaning}</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -58,12 +60,14 @@ export default function TarotCard({ card, selected, onSelect }: TarotCardProps) 
                 <div className="card-overlay" onClick={() => onSelect(card.id)}>
                     <div className="card-large">
                         <div className="card-inner">
-                            <div className="card-front-large">
-                                <span>{card.name}</span>
-                            </div>
-                            <div className="card-back-large">
-                                <h2>{card.name}</h2>
-                                <p>{card.meaning}</p>
+                            <div className="card-spin-wrapper">
+                                <div className="card-front-large">
+                                    <span>{card.name}</span>
+                                </div>
+                                <div className="card-back-large">
+                                    <h2>{card.name}</h2>
+                                    <p>{card.meaning}</p>
+                                </div>
                             </div>
                         </div>
                     </div>

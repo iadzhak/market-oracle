@@ -57,7 +57,8 @@ h1 {
   font-size: 56px;
   letter-spacing: -1.68px;
   color: var(--text-h);
-  margin: 32px 0;
+  margin: 62px 0;
+  text-align: center;
 }
 
 @media (max-width: 1024px) {
