@@ -12,7 +12,6 @@ class RawData(Base, table=True):
 
     id: int | None = Field(default=None, primary_key=True)
     source_id: int = Field(foreign_key='sources.id')
-    symbol: str
     fetched_at: dt.datetime = Field(default_factory=lambda: dt.datetime.now(dt.timezone.utc))
     payload: Optional[dict | list] = Field(
         default=None,

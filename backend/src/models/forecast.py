@@ -12,6 +12,7 @@ from ..constants import FRESH_DELTA_MINUTES, MIN_CONFIDENCE, MAX_CONFIDENCE
 class ForecastType(StrEnum):
     UP = "up"
     DOWN = "down"
+    UNCERTAIN = "uncertain"
 
 
 class Forecast(Base, table=True):

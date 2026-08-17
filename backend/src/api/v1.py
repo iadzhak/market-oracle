@@ -10,15 +10,16 @@ router = APIRouter(prefix='/api')
 
 @router.get('/tokens')
 async def tokens() -> list[str]:
-    return conf.AVAILABLE_TOKENS
+    return list(conf.TOKENS_AND_SEARCH.keys())
 
 
 @router.get('/tokens/{token}')
 async def token_info(token: str, session: SessionDep):
     fresh = await Forecast.get_fresh_forecast(session, token)
     if fresh is None:
-        raw_data, metric, trend_up = await make_forecast(token)
+        raw_data, metric, fresh = await make_forecast(token)
         session.add(metric)
         session.add_all(raw_data)
+        session.add(fresh)
         await session.commit()
     return fresh

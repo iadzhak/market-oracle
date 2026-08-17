@@ -5,7 +5,9 @@ MAX_CONFIDENCE = 0
 
 # Sources
 SOURCE_COINGECKO = 'coingecko'
-SOURCE_CRYPTOPANIK = 'cryptopanic'
+SOURCE_WORLDNEWS = 'worldnews'
+SOURCE_BINANCE = 'binance'
+SOURCE_NEWSAPI = 'newsapi'
 
 SOURCES = [
     {
@@ -14,8 +16,19 @@ SOURCES = [
         'url': 'https://www.coingecko.com/'
     },
     {
-        'id': 'cryptopanic',
+        'id': SOURCE_WORLDNEWS,
         'type': 'Источник новостей',
-        'url': 'https://cryptopanic.com/'
-    }
+        'url': 'https://worldnewsapi.com'
+    },
+    {
+        'id': SOURCE_BINANCE,
+        'type': 'Источник цен',
+        'url': 'https://www.binance.com/'
+    },
+    {
+        'id': SOURCE_NEWSAPI,
+        'type': 'Источник новостей',
+        'url': 'https://newsapi.org/'
+    },
+
 ]

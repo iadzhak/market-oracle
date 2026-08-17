@@ -8,5 +8,6 @@ class Metric(Base, table=True):
 
     id: int | None = Field(default=None, primary_key=True)
     calculated_at: DateTimeNowField
-    close_last: float
-    ma_40: float
+    ma: float
+    news_p: float
+    news_s: int
