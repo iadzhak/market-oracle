@@ -10,4 +10,4 @@ class Metric(Base, table=True):
     calculated_at: DateTimeNowField
     ma: float
     news_p: float
-    news_s: int
+    news_s: float

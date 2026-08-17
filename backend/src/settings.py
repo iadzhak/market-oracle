@@ -11,6 +11,8 @@ DEFAULT_TOKENS_AND_SEARCH = {
     'tontoken': 'ton token'
 }
 
+NEWS_API_KEY = 'edbc73f73de24b09a1eae186b6e8b0d5'
+NEWS_API_URL = 'https://newsapi.org/v2'
 
 class Settings(BaseSettings):
     TOKENS_AND_SEARCH: dict[str, str] = DEFAULT_TOKENS_AND_SEARCH  # id from coingecko and search phrase for news

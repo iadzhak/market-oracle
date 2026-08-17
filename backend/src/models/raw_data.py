@@ -11,7 +11,7 @@ class RawData(Base, table=True):
     __tablename__ = 'raw_data'
 
     id: int | None = Field(default=None, primary_key=True)
-    source_id: int = Field(foreign_key='sources.id')
+    source_id: str = Field(foreign_key='sources.id')
     fetched_at: dt.datetime = Field(default_factory=lambda: dt.datetime.now(dt.timezone.utc))
     payload: Optional[dict | list] = Field(
         default=None,

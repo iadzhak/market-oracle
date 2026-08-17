@@ -6,3 +6,4 @@ sqlmodel==0.0.39
 aiosqlite==0.22.1
 ccxt==4.5.73
 textblob==0.20.1
+tqdm==4.70.0
