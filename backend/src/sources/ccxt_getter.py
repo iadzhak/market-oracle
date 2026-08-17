@@ -10,7 +10,7 @@ class CCXTPriceGetter(PriceBaseSource):
 
     TIMEFRAME_1H = '1h'
 
-    def __init__(self, exchange_id: str='binance', retries: int=3, delay: int=1000) -> None:
+    def __init__(self, exchange_id: str, retries: int=3, delay: int=1000) -> None:
         self.exchange = getattr(ccxt, exchange_id)()
         self.exchange.options['maxRetriesOnFailure'] = retries
         self.exchange.options['maxRetriesOnFailureDelay'] = delay

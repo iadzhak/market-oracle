@@ -12,7 +12,6 @@ from ..constants import FRESH_DELTA_MINUTES, MIN_CONFIDENCE, MAX_CONFIDENCE
 class ForecastType(StrEnum):
     UP = "up"
     DOWN = "down"
-    UNCERTAIN = "uncertain"
 
 
 class Forecast(Base, table=True):
@@ -20,9 +19,14 @@ class Forecast(Base, table=True):
 
     id: int | None = Field(default=None, primary_key=True)
     token: str
-    direction: ForecastType
-    confidence: float = Field(ge=MIN_CONFIDENCE, le=MAX_CONFIDENCE)
+    target: float
+    actual: float | None
+    price_ma_ratio: float
+    news_polarity: float
+    news_subjectivity: float
     created_at: DateTimeNowField
+    is_trained: bool = Field(default=False)
+
 
     @classmethod
     async def get(cls, session: AsyncSession, **kwargs):
