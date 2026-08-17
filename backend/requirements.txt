@@ -5,4 +5,4 @@ sqlalchemy==2.0.52
 sqlmodel==0.0.39
 aiosqlite==0.22.1
 ccxt==4.5.73
-textblob==4.5.73
+textblob==0.20.1
