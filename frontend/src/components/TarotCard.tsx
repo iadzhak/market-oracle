@@ -6,6 +6,10 @@ interface TarotCardProps {
     card: { id: number; name: string; meaning: string };
 }
 
+function get_icon(token: string) {
+    return `https://cryptoicon.io/wp-content/uploads/cc-assets/SVG/Light/${token.toUpperCase()}.svg`
+}
+
 export default function TarotCard({ card }: TarotCardProps) {
     const [isAnimating, setIsAnimating] = useState(false);
     const [isRevealed, setIsRevealed] = useState(false);
@@ -38,7 +42,7 @@ export default function TarotCard({ card }: TarotCardProps) {
             setIsAnimating(false);
             setIsRevealed(true);
             setIsOverlayVisible(true);
-        }, 5000);
+        }, 1000);
     };
 
     const handleOverlayClick = () => {
@@ -54,6 +58,8 @@ export default function TarotCard({ card }: TarotCardProps) {
                 <div className="card-inner">
                     <div className="card-spin-wrapper">
                         <div className="card-front">
+                            <img src={get_icon(card.name)} width="50" height="50" />
+                            <br />
                             <span>{card.name}</span>
                         </div>
                         <div className="card-back">
