@@ -1,4 +1,4 @@
-fastapi[standard]==0.141.1
+astapi[standard]==0.141.1
 httpx==0.28.1
 pydantic-settings==2.15.0
 sqlalchemy==2.0.52
@@ -9,3 +9,4 @@ textblob==0.20.1
 tqdm==4.70.0
 pytest==9.1.1
 pytest-asyncio==1.4.0
+scikit-learn==1.9.0

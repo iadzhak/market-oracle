@@ -2,7 +2,7 @@ import datetime as dt
 from typing import Optional
 
 from sqlalchemy import JSON, Column, func
-from sqlmodel import Field, Relationship
+from sqlmodel import Field, Relationship, SQLModel
 
 from .base import Base
 

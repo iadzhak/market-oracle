@@ -1,25 +1,57 @@
 from fastapi import APIRouter
 
-from ..scoring.make_forecast import make_forecast
-from ..database import SessionDep
-from ..models import Forecast
+from ..models import Forecast, RawData
 from ..settings import conf
+from ..dependencies import SessionDep, DataProcessorDep
+from ..core import Oracle
+from ..constants import SOURCE_NEWSAPI, SOURCE_BINANCE
 
 router = APIRouter(prefix='/api')
 
 
 @router.get('/tokens')
 async def tokens() -> list[str]:
-    return list(conf.TOKENS_AND_SEARCH.keys())
+    return conf.TOKENS
 
 
 @router.get('/tokens/{token}')
-async def token_info(token: str, session: SessionDep):
-    fresh = await Forecast.get_fresh_forecast(session, token)
-    if fresh is None:
-        raw_data, metric, fresh = await make_forecast(token)
-        session.add(metric)
+async def token_info(token: str, session: SessionDep, data_processor: DataProcessorDep):
+    token = token.lower()
+    forecast = await Forecast.get_fresh_forecast(session, token)
+    if forecast is None:
+        # get raw data and metrics
+        ohlcv_raw, news_raw = await data_processor.get_raw_data(token)
+        last_close, ma_signal, news_p, news_s = data_processor.normalize_raw_data(ohlcv_raw, news_raw)
+
+        # make new forecast
+        oracle = Oracle('token')
+        pred, proba = oracle.predict([[ma_signal, news_p, news_s]])
+
+        # save data
+        forecast = Forecast(
+            token=token,
+            last_price=last_close,
+            target=pred,
+            confidence=proba,
+            price_ma_ratio=ma_signal,
+            news_polarity=news_p,
+            news_subjectivity=news_s
+        )
+        raw_data = [
+            RawData(
+                forecast=forecast,
+                source_id=SOURCE_BINANCE,
+                payload=ohlcv_raw
+            ),
+            RawData(
+                forecast=forecast,
+                source_id=SOURCE_NEWSAPI,
+                payload=news_raw
+            )
+        ]
+        session.add(forecast)
         session.add_all(raw_data)
-        session.add(fresh)
         await session.commit()
-    return fresh
+        # check is_tarin raito > 5 then make train task
+    return forecast
+

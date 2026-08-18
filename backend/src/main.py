@@ -1,8 +1,11 @@
-from fastapi import FastAPI
+from typing import Annotated
+
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 
 from .api import api_v1
 from .lifespan import lifespan
+from .sources import PriceBaseSource
 
 
 app = FastAPI(lifespan=lifespan)

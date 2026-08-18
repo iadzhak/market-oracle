@@ -17,7 +17,8 @@ class CCXTPriceGetter(PriceBaseSource):
 
     async def get_ohlcv_1h(self, token: str, date_to: dt.datetime | None = None, limit: int = 20) -> Any:
         symbol = f'{token.upper()}/USDT'
-        date_from = date_to or dt.datetime.now() - dt.timedelta(hours=limit)
+        date_from = date_to or dt.datetime.now()
+        date_from -= dt.timedelta(hours=limit)
         since = int(date_from.timestamp() * 1000)  # integer milliseconds
         data_ohlcv = await self.exchange.fetch_ohlcv(
             symbol=symbol,
@@ -38,3 +39,6 @@ class CCXTPriceGetter(PriceBaseSource):
 
     def parce_close_price_last(self, data: Any) -> float:
         return data[-1][4]
+
+    async def close(self):
+        await self.exchange.close()

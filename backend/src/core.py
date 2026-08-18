@@ -1,43 +1,47 @@
-import asyncio
-import datetime as dt
-
-from .sources import PriceBaseSource, NewsBaseSource
+import numpy as np
+from joblib import dump, load
+from sklearn.linear_model import SGDClassifier
+from pathlib import Path
+from .settings import conf
 
 class Oracle:
 
-    DELTA_DAYS_PREDICT = 1
+    def __init__(self, token: str = conf.DEFAULT_MODEL_NAME) -> None:
+        self.model = SGDClassifier(loss='log_loss', random_state=42)
+        self.path = self._get_path(token)
+        self.load_model()
 
-    def __init__(self, price_getter: PriceBaseSource, news_getter: NewsBaseSource) -> None:
-        self.price_getter = price_getter
-        self.news_getter = news_getter
+    @staticmethod
+    def _get_path(token: str):
+        return Path(f'./weights/{token.lower()}.joblib').resolve()
 
-    async def get_raw_data(self, token: str, date: dt.datetime | None):
-        """Получает сырые ценовые и новостные данные для токена."""
-        date = date or dt.datetime.now()
-        ohlcv_raw, news_raw = asyncio.gather(
-            self.price_getter.get_ohlcv_1h(token=token, date_to=date),
-            self.news_getter.get_news(token=token, date_to=date)
-        )
-        return ohlcv_raw, news_raw
+    def train(self, x: list[list[float]], y: list[int]):
+        x_train = np.array(x)
+        y_train = np.array(y)
+        self.model.partial_fit(x_train, y_train, classes=[0, 1])
+        self.save_model()
 
-    async def get_actual_price(self, token: str, date: dt.datetime) -> float:
+    def save_model(self):
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        dump(self.model, self.path)
+
+    def load_model(self):
+        default_path = self._get_path(conf.DEFAULT_MODEL_NAME)
+        model_path = self.path
+        if model_path.exists():
+            self.model = load(model_path)
+            return
+        if default_path.exists():
+            self.model = load(default_path)
+            return
+
+    def predict(self, x: list[list[float]]) -> tuple[int, float]:
         """
-        Возвращает актуальную цену закрытия по данным прогноза.
-        То есть дата прогноза плюс дельта (1 день)
+        Возвращает:
+          - предсказанный класс (0 или 1)
+          - уверенность (вероятность предсказания)
         """
-        check_date = date + dt.timedelta(days=self.DELTA_DAYS_PREDICT)
-        if check_date > dt.datetime.now():
-            raise RuntimeError(f'Невозможно получить данные на {check_date}')
-        ohlcv_raw = await self.price_getter.get_ohlcv_1h(token=token)
-        return self.price_getter.parce_close_price_last(ohlcv_raw)
-
-    def normalize_raw_data(self, ohlcv_raw, news_raw):
-        """Нормализует сырые данные, возвращая MA-сигнал и.sentiment-метрики."""
-        news_descriptions = self.news_getter.parse_articles(news_raw)
-        close_prices = self.price_getter.parse_close_prices(ohlcv_raw)
-
-        ma_signal = self.price_getter.calculate_normalized_ma(close_prices)
-        news_p, news_s = self.news_getter.calculate_news_sentiment(news_descriptions)
-
-        return ma_signal, news_p, news_s
-
+        x_arr = np.array(x)
+        pred = self.model.predict(x_arr)[0]
+        proba = self.model.predict_proba(x_arr)[0, pred]
+        return int(pred), float(proba)
