@@ -58,6 +58,10 @@
     word-break: break-word;
 }
 
+.card-back h2 {
+    margin-bottom: 5px;
+}
+
 .card-front {
     background: linear-gradient(145deg, #5a3f37, #2c1b18);
     color: white;
@@ -75,6 +79,20 @@
     margin: 10px 12px;
     padding: 0 4px;
     word-wrap: break-word;
+}
+
+.card-back .arrow {
+    font-size: 40px;
+    line-height: 1;
+    margin: 10px 0;
+}
+
+.card-back .arrow.up {
+    color: #1a521c;
+}
+
+.card-back .arrow.down {
+    color: #85251f;
 }
 
 .card-large {
@@ -114,16 +132,24 @@
 }
 
 .card-back-large h2 {
-    font-size: 24px;
-    margin-bottom: 16px;
+    font-size: 42px !important;
+    font-weight: bold !important;
+    margin-bottom: 16px !important;
 }
 
 .card-back-large p {
     font-size: 20px;
-    text-align: center;
+    text-align: left;
     margin: 0;
     line-height: 1.5;
     word-wrap: break-word;
+}
+
+.card-back-large .forecast-main {
+    font-size: 42px;
+    text-align: left;
+    font-weight: bold;
+    margin-bottom: 12px;
 }
 
 .card-overlay {
@@ -160,3 +186,4 @@
     50% { transform: rotateY(720deg) rotate(5deg); }
     100% { transform: rotateY(1440deg) rotate(0deg); }
 }
+

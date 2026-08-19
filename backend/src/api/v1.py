@@ -53,5 +53,9 @@ async def token_info(token: str, session: SessionDep, data_processor: DataProces
         session.add_all(raw_data)
         await session.commit()
         # check is_tarin raito > 5 then make train task
+        not_trained = await Forecast.get(session=session, token=token, is_trained=False)
+        if len(not_trained) > 5:
+            print('Пора на тренировку')
+            pass
     return forecast
 

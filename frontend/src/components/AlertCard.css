@@ -1,15 +1,15 @@
-#root .tarot-card .card-back {
+.tarot-card .card-back {
     padding: 8px 6px;
 }
 
-#root .tarot-card .card-back h3 {
+.tarot-card .card-back h3 {
     font-size: 13px;
     margin: 0 0 4px 0;
     text-align: center;
     line-height: 1.2;
 }
 
-#root .tarot-card .card-back p.alert {
+.tarot-card .card-back p.alert {
     font-size: 10px;
     display: -webkit-box;
     -webkit-line-clamp: 4;
@@ -20,16 +20,16 @@
     line-height: 1.2;
 }
 
-#root .card-large .card-back-large {
+.card-large .card-back-large {
     padding: 20px;
 }
 
-#root .card-large .card-back-large h2 {
-    font-size: 22px;
+.card-large .card-back-large h2 {
+    font-size: 18px;
     margin-bottom: 12px;
 }
 
-#root .card-large .card-back-large p {
+.card-large .card-back-large p {
     font-size: 15px;
     text-align: left;
     line-height: 1.4;

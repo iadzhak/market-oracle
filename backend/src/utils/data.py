@@ -42,7 +42,6 @@ class DataProcessor:
         """
         news_descriptions = self.news_getter.parse_articles(news_raw)
         close_prices = self.price_getter.parse_close_prices(ohlcv_raw)
-        print(close_prices)
 
         ma_signal = self.price_getter.calculate_normalized_ma(close_prices)
         last_close = close_prices[-1]

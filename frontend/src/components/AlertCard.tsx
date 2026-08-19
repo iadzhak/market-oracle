@@ -38,7 +38,7 @@ export default function AlertCard() {
                                     <span>{info.name}</span>
                                 </div>
                                 <div className="card-back-large">
-                                    <h2>{info.name}</h2>
+                                    <h3>{info.name}</h3>
                                     <p>{info.meaning}</p>
                                 </div>
                             </div>
