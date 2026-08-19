@@ -7,7 +7,7 @@ from .core import Oracle
 from .database import Session
 from .sources import CCXTPriceGetter, NewsApiGetter
 from .settings import conf
-from .lifespan import setup_db
+from .lifespan import setup_db, get_price_getter, get_news_getter
 from .utils import collect, perform_train
 
 
@@ -20,14 +20,10 @@ async def main(args):
     await setup_db()
     async with Session() as session:
         if args.mode == MODES.COLLECT:
-            price_getter = CCXTPriceGetter(conf.CCXT_EXCHANGE)
-            news_getter = NewsApiGetter(
-                base_url=conf.NEWS_API_URL,
-                api_key=conf.NEWS_API_KEY,
-                news_url=conf.NEWS_API_ENDPOINT
-            )
+            price_getter = get_price_getter()
+            news_getter = get_news_getter()
             now = dt.datetime.now()
-            dates = [now - dt.timedelta(days=x) for x in range(7, 2, -1)]
+            dates = [now - dt.timedelta(days=x) for x in range(args.days + 2, 2, -1)]
             await collect(
                 news_getter=news_getter,
                 price_getter=price_getter,
@@ -45,6 +41,13 @@ async def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Базовая тренировка модели')
-    parser.add_argument('mode', choices=MODES, help='Режим работы')
+    parser.add_argument(
+        'mode', choices=MODES,
+        help='Режим работы. collect - сбор данных и сохранение в бд. train - тренировка модели'
+    )
+    parser.add_argument(
+        '-d', '--days',
+        default=5, type=int,
+        help='Дней для загружаемой выборки (collect mode, default=5)')
     args = parser.parse_args()
     asyncio.run(main(args))

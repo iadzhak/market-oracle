@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from pydantic import BaseModel
 
 from ..models import Forecast, RawData
 from ..settings import conf
@@ -14,17 +15,25 @@ async def tokens() -> list[str]:
     return conf.TOKENS
 
 
+
+
+class ForecastResponse(BaseModel):
+    forecast: Forecast
+    error_raito: float
+    contributions: list[float]
+
+
 @router.get('/tokens/{token}')
 async def token_info(token: str, session: SessionDep, data_processor: DataProcessorDep):
     token = token.lower()
     forecast = await Forecast.get_fresh_forecast(session, token)
+    oracle = Oracle(token)
     if forecast is None:
         # get raw data and metrics
         ohlcv_raw, news_raw = await data_processor.get_raw_data(token)
         last_close, ma_signal, news_p, news_s = data_processor.normalize_raw_data(ohlcv_raw, news_raw)
 
         # make new forecast
-        oracle = Oracle('token')
         pred, proba = oracle.predict([[ma_signal, news_p, news_s]])
 
         # save data
@@ -57,5 +66,6 @@ async def token_info(token: str, session: SessionDep, data_processor: DataProces
         if len(not_trained) > 5:
             print('Пора на тренировку')
             pass
-    return forecast
-
+    error_raito = await Forecast.get_error_raito(session, token)
+    contributions = oracle.contributions([[forecast.price_ma_ratio, forecast.news_polarity, forecast.news_subjectivity]])
+    return ForecastResponse(forecast=forecast, error_raito=error_raito, contributions=list(contributions))

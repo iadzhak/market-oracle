@@ -6,7 +6,7 @@ from sqlmodel import SQLModel
 from .database import engine, Session
 from .models import *
 from .constants import SOURCES
-from .sources import CCXTPriceGetter, NewsApiGetter
+from .sources import CCXTPriceGetter, NewsApiGetter, NewsBaseSource, PriceBaseSource, FakeNewsApiGetter
 from .settings import conf
 from .utils import DataProcessor
 
@@ -19,14 +19,23 @@ async def setup_db():
         await session.commit()
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    app.state.news_getter = NewsApiGetter(
+def get_news_getter() -> NewsBaseSource:
+    return FakeNewsApiGetter()
+    return NewsApiGetter(
         base_url=conf.NEWS_API_URL,
         api_key=conf.NEWS_API_KEY,
         news_url=conf.NEWS_API_ENDPOINT
     )
-    app.state.price_getter = CCXTPriceGetter(conf.CCXT_EXCHANGE)
+
+
+def get_price_getter() -> PriceBaseSource:
+    return CCXTPriceGetter(conf.CCXT_EXCHANGE)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    app.state.news_getter = get_news_getter()
+    app.state.price_getter = get_price_getter()
     app.state.data_processor = DataProcessor(
         price_getter=app.state.price_getter,
         news_getter=app.state.news_getter

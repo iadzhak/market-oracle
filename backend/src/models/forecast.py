@@ -44,3 +44,15 @@ class Forecast(Base, table=True):
         stmt = select(cls).where(cls.token == token, cls.created_at >= some_time_ago)
         result = await session.execute(stmt)
         return result.scalars().first()
+
+    @classmethod
+    async def get_error_raito(cls, session: AsyncSession, token: str) -> float:
+        token = token.upper()
+        stmt = select(cls).where(cls.token == token, cls.target.is_not(None), cls.actual.is_not(None))
+        result = await session.execute(stmt)
+        forecasts = result.scalars().all()
+        wrong = 0
+        for forecast in forecasts:
+            if forecast.target != forecast.actual:
+                wrong += 1
+        return wrong / len(forecasts)

@@ -1,5 +1,6 @@
 import datetime as dt
 from typing import Any
+from faker import Faker
 
 import httpx
 from textblob import TextBlob
@@ -7,26 +8,18 @@ from textblob import TextBlob
 from .base import NewsBaseSource
 
 
-class NewsApiGetter(NewsBaseSource):
+class FakeNewsApiGetter(NewsBaseSource):
 
-    def __init__(self, base_url: str, api_key: str, news_url: str) -> None:
-        self.client = httpx.AsyncClient(
-            base_url=base_url,
-            params={'apiKey': api_key}
-        )
-        self.news_url = news_url
+    def __init__(self) -> None:
+        self.fake = Faker()
 
     async def get_news(self, token: str, date_to: dt.datetime | None = None) -> dict[str, Any]:
-        date_to = date_to or dt.datetime.now()
-        params = {
-            'q': f'{token.lower()} token',
-            'pageSize': 10,
-            'language': 'en',
-            'to': date_to.isoformat(),
-            'sortBy': 'publishedAt',
-        }
-        response = await self.client.get(self.news_url, params=params)
-        return response.json()
+        result = {'articles':[]}
+        for _ in range(10):
+            result['articles'].append({
+                'description': self.fake.text()
+            })
+        return result
 
     def calculate_news_sentiment(self, news: list[str]) -> tuple[float, float]:
         if len(news) == 0:

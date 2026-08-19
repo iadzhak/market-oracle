@@ -32,7 +32,7 @@ class CCXTPriceGetter(PriceBaseSource):
         if len(prices) == 0:
             return 0
         ma = sum(prices) / len(prices)
-        return prices[-1] / ma - 1
+        return prices[-1] / ma
 
     def parse_close_prices(self, data: Any) -> list[float]:
         return [d[4] for d in data]

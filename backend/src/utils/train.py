@@ -12,5 +12,9 @@ async def perform_train(oracle: Oracle, session: AsyncSession):
     y_train = [f.actual for f in forecasts]
     oracle.train(x_train, y_train)
     for forecast in forecasts:
+        x = [forecast.price_ma_ratio, forecast.news_polarity, forecast.news_subjectivity]
+        pred, proba = oracle.predict([x])
+        forecast.target = pred
+        forecast.confidence = proba
         forecast.is_trained = True
     await session.commit()

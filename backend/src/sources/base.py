@@ -35,7 +35,6 @@ class PriceBaseSource(ABC):
         На определенную в параметрах дату. Цены получаем относительно USDT.
         Можно ограничивать количество данных через limit, по-умолчанию 20.
         """
-        pass
 
     @abstractmethod
     def calculate_normalized_ma(self, prices: list[float])-> float:
@@ -43,17 +42,19 @@ class PriceBaseSource(ABC):
         На вход подаются цены для расчета MA в порядке возрастания timestamp.
         Вернет нормализованный сигнал тренда.
         """
-        pass
 
     @abstractmethod
     def parse_close_prices(self, data: Any) -> list[float]:
         """
         Возвращает список цен закрытия из данных OHLCV
         """
-        pass
 
     @abstractmethod
     def parce_close_price_last(self, data: Any) -> float:
         """
         Возвращает последнюю цену закрытия
         """
+
+    @abstractmethod
+    async def close(self) -> None:
+        """Закрытие соединения при необходимости"""

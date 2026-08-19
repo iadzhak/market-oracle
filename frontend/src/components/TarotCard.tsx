@@ -2,10 +2,34 @@ import {useRef, useState} from 'react';
 import './TarotCard.css';
 import flipSound from '../assets/flip.mp3';
 import {forecastUrl} from "../api.ts";
+import arrowUp from '../assets/up.png';
+import arrowDown from '../assets/down.png'
+import arrowUnknown from '../assets/unknown.png'
 
 
 function get_icon(token: string) {
     return `https://cryptoicon.io/wp-content/uploads/cc-assets/SVG/Light/${token.toUpperCase()}.svg`
+}
+
+function get_arrow(target: number | undefined) {
+    if (target == 1) return arrowUp;
+    if (target == 0) return arrowDown;
+    return arrowUnknown;
+}
+
+function get_contributions(t: number | undefined, contr: number[] | undefined) {
+    if (!contr) return;
+    const [ma, p] = contr
+    let reasons = ''
+    if (t == 1) {
+        if (ma > 0) reasons += 'Восходящий тренд по часовому графику.\n'
+        if (p > 0) reasons += 'Новости позитивные.\n'
+    }
+    if (t == 0) {
+        if (ma < 0) reasons += 'Нисходящий тренд по часовому графику.\n'
+        if (p < 0) reasons += 'Новости не позитивные.\n'
+    }
+    return reasons || 'Противоречивые данные, но чутье мне подсказывает что будет так.';
 }
 
 type TarotCardProps = {
@@ -22,15 +46,20 @@ type TarotCardProps = {
     "is_trained": boolean
 }
 
+type ResponseProps = {
+    forecast: TarotCardProps;
+    error_raito: number;
+    contributions: number[];
+}
+
 export default function TarotCard({ token }: {token: string}) {
     const [isAnimating, setIsAnimating] = useState(false);
     const [isRevealed, setIsRevealed] = useState(false);
     const [isOverlayVisible, setIsOverlayVisible] = useState(false);
     const audioRef = useRef(new Audio(flipSound));
-    const [info, setInfo] = useState<TarotCardProps>();
+    const [info, setInfo] = useState<ResponseProps>();
 
-    const handleClick = (e: React.MouseEvent) => {
-        e.stopPropagation();
+    const handleClick = () => {
 
         if (isOverlayVisible) {
             return;
@@ -75,16 +104,14 @@ export default function TarotCard({ token }: {token: string}) {
                 <div className="card-inner">
                     <div className="card-spin-wrapper">
                         <div className="card-front">
-                            <img src={get_icon(token)} width="50" height="50" />
+                            <img src={get_icon(token)} alt={`${token} icon`} width="50" height="50" />
                             <br />
                             <span>{token}</span>
                         </div>
                         <div className="card-back">
-                            <h2>{token}</h2>
-                            <span className={`arrow`}>
-                                {info?.target == 1 && '📈'}
-                                {info?.target == 0 && '📉'}
-                            </span>
+                            <img src={get_arrow(info?.forecast?.target)} alt={`forecast direction`} width="50" height="50" />
+                            <br />
+                            <span>{token}</span>
                         </div>
                     </div>
                 </div>
@@ -100,11 +127,14 @@ export default function TarotCard({ token }: {token: string}) {
                                 </div>
                                 <div className="card-back-large">
                                     <h2>{token}</h2>
-                                    <p className="forecast-main">Завтра вырастет</p>
-                                    <p>уверен на {Math.trunc(info?.confidence * 100)} %</p>
-                                    <p>В среднем ошибаюсь в 5%</p>
-                                    <p>Текущий тренд по SMA20 вверх на часовом графике</p>
-                                    <p>Новостной фон хороший</p>
+                                    <p className="forecast-main">
+                                        {info?.forecast?.target == 1 && 'Вырастет через сутки'}
+                                        {info?.forecast?.target == 0 && 'Упадет через сутки'}
+                                    </p>
+                                    <p>Уверен на {info?.forecast?.confidence && Math.trunc(info?.forecast.confidence * 100)} %</p>
+                                    <p className="errors">В среднем ошибаюсь в {info?.error_raito && Math.trunc(info?.error_raito * 100)}% случаев</p>
+                                    <br />
+                                    <p>{get_contributions(info?.forecast?.target, info?.contributions)}</p>
                                 </div>
                             </div>
                         </div>

@@ -3,7 +3,7 @@ from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
 
-    TOKENS: set[str] = {'BTC', 'ETH', 'BNB', 'DOGE'}
+    TOKENS: set[str] = {'BTC', 'ETH', 'BNB', 'DOGE', 'SOL', 'XRP', 'ONDO'}
 
     NEWS_API_KEY: str = 'edbc73f73de24b09a1eae186b6e8b0d5'
     NEWS_API_URL: str = 'https://newsapi.org/v2'
