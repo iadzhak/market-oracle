@@ -19,7 +19,8 @@ docker compose up -d --build
 
 ```bash
 # Токены для прогноза (JSON array).
-# Принятые наименования токенов, можно посмотреть например тут: https://www.binance.com/ru/markets/overview
+# Принятые наименования токенов
+# Посмотреть например тут: https://www.binance.com/ru/markets/overview
 TOKENS='["BTC", "ETH", "BNB", "SOL"]'
 
 # Новости (NewsAPI) 
