@@ -5,7 +5,7 @@ class Settings(BaseSettings):
 
     TOKENS: set[str] = {'BTC', 'ETH', 'BNB', 'DOGE', 'SOL', 'XRP', 'ONDO'}
 
-    NEWS_FAKER: bool = False
+    NEWS_FAKER: bool = True
     NEWS_API_KEY: str = 'secret-key'
     NEWS_API_URL: str = 'https://newsapi.org/v2'
     NEWS_API_ENDPOINT: str = '/everything'

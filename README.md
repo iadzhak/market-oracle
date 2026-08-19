@@ -18,12 +18,16 @@ docker compose up -d --build
 Создай `.env` в корне проекта:
 
 ```bash
-# Токены для прогноза (JSON array)
+# Токены для прогноза (JSON array).
+# Принятые наименования токенов, можно посмотреть например тут: https://www.binance.com/ru/markets/overview
 TOKENS='["BTC", "ETH", "BNB", "SOL"]'
 
-# Новости (NewsAPI)
+# Новости (NewsAPI) 
+# Получить api key можно тут: https://newsapi.org/
 NEWS_API_KEY=your-api-key
-NEWS_FAKER=false          # true = фейковые новости (без API)
+# Если с api проблемы то можно включить мок на новости
+# Мок включен по умолчанию, поэтому его надо обязательно отключить при использовании новостного api
+NEWS_FAKER=True
 ```
 
 ## 📦 Предтренировка модели
