@@ -3,9 +3,9 @@ from typing import Annotated
 from fastapi import Depends, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from .utils import DataProcessor
-from .sources import PriceBaseSource, NewsBaseSource
 from .database import Session
+from .sources import NewsBaseSource, PriceBaseSource
+from .utils import DataProcessor
 
 
 def get_price_getter(request: Request) -> PriceBaseSource:

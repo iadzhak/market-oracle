@@ -88,6 +88,10 @@ export default function TarotCard({ token }: {token: string}) {
                 setIsRevealed(true);
                 setIsOverlayVisible(true);
             })
+            .catch(e => {
+                console.error(e);
+                setIsAnimating(false);
+            })
 
     };
 

@@ -1,13 +1,12 @@
-import asyncio
 import argparse
-from enum import StrEnum
+import asyncio
 import datetime as dt
+from enum import StrEnum
 
 from .core import Oracle
 from .database import Session
-from .sources import CCXTPriceGetter, NewsApiGetter
+from .lifespan import get_news_getter, get_price_getter, setup_db
 from .settings import conf
-from .lifespan import setup_db, get_price_getter, get_news_getter
 from .utils import collect, perform_train
 
 
@@ -36,7 +35,6 @@ async def main(args):
             oracle = Oracle()
             await perform_train(oracle, session)
             print('Тренировка завершена')
-
 
 
 if __name__ == '__main__':

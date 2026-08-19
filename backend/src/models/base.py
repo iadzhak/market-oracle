@@ -2,7 +2,7 @@ import datetime as dt
 from typing import Annotated
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlmodel import SQLModel, Field, select
+from sqlmodel import Field, SQLModel, select
 
 DateTimeNowField = Annotated[dt.datetime,  Field(default_factory=lambda: dt.datetime.now(dt.timezone.utc))]
 

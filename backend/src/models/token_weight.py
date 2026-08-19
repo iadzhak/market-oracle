@@ -1,8 +1,9 @@
 from typing import Optional
 
-from sqlmodel import Field, Column, JSON
+from sqlmodel import JSON, Column, Field
 
 from .base import Base
+
 
 class TokenWeight(Base, table=True):
     __tablename__ = 'token_weights'

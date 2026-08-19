@@ -1,8 +1,8 @@
 import datetime as dt
 from typing import Optional
 
-from sqlalchemy import JSON, Column, func
-from sqlmodel import Field, Relationship, SQLModel
+from sqlalchemy import JSON, Column
+from sqlmodel import Field, Relationship
 
 from .base import Base
 
@@ -21,4 +21,3 @@ class RawData(Base, table=True):
 
     source: 'Source' = Relationship(back_populates='raw_data')
     forecast: 'Forecast' = Relationship(back_populates='raw_data')
-    

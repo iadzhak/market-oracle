@@ -1,7 +1,8 @@
-import datetime as dt
 import asyncio
+import datetime as dt
 
-from ..sources import PriceBaseSource, NewsBaseSource
+from ..sources import NewsBaseSource, PriceBaseSource
+
 
 class DataProcessor:
 

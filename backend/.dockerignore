@@ -2,3 +2,4 @@
 .idea
 .gigacode
 .env
+db.sqlite3

@@ -1,0 +1,12 @@
+services:
+  backend:
+    build: ./backend
+    env_file:
+      - .env
+    volumes:
+      - ./db.sqlite3:/app/db.sqlite3
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"

@@ -5,10 +5,11 @@ import itertools
 from sqlalchemy.ext.asyncio import AsyncSession
 from tqdm import tqdm
 
+from ..constants import SOURCE_BINANCE, SOURCE_NEWSAPI
 from ..models import Forecast, RawData
 from ..sources import NewsBaseSource, PriceBaseSource
-from ..constants import SOURCE_BINANCE, SOURCE_NEWSAPI
 from .data import DataProcessor
+
 
 async def collect(
         news_getter: NewsBaseSource,
@@ -55,4 +56,3 @@ async def collect(
         session.add_all([forecast, ohlcv, news])
     await session.commit()
     print('Загрузка данных завершена')
-

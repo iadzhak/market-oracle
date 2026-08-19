@@ -1,14 +1,15 @@
+from pathlib import Path
+
 import numpy as np
 from joblib import dump, load
 from sklearn.linear_model import SGDClassifier
-from pathlib import Path
-
 from sklearn.preprocessing import StandardScaler
 
 from .settings import conf
 
 # Путь относительно расположения этого модуля
 _BASE_DIR = Path(__file__).resolve().parent.parent / "weights"
+
 
 class Oracle:
     GLOBAL_SCALER_PATH = _BASE_DIR / "global_scaler.joblib"
@@ -25,7 +26,7 @@ class Oracle:
 
     def train(self, x: list[list[float]], y: list[int]):
         if self.scaler is None:
-           self._create_scaler(x)
+            self._create_scaler(x)
         x_train = self.scaler.transform(np.array(x))
         y_train = np.array(y)
         self.model.partial_fit(x_train, y_train, classes=[0, 1])
@@ -73,4 +74,3 @@ class Oracle:
         coef = self.model.coef_[0]
         x_scaled = self.scaler.transform(x)
         return x_scaled[0] * coef
-

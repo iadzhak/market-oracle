@@ -1,8 +1,7 @@
 import datetime as dt
 from typing import Any
-from faker import Faker
 
-import httpx
+from faker import Faker
 from textblob import TextBlob
 
 from .base import NewsBaseSource
@@ -14,7 +13,7 @@ class FakeNewsApiGetter(NewsBaseSource):
         self.fake = Faker()
 
     async def get_news(self, token: str, date_to: dt.datetime | None = None) -> dict[str, Any]:
-        result = {'articles':[]}
+        result = {'articles': []}
         for _ in range(10):
             result['articles'].append({
                 'description': self.fake.text()
@@ -33,7 +32,7 @@ class FakeNewsApiGetter(NewsBaseSource):
             s += testimonial.sentiment.subjectivity
             count += 1
         if count == 0:
-            return 0.5, 0.5  #  вернем средние значения чтобы не сильно влиять
+            return 0.5, 0.5  # вернем средние значения чтобы не сильно влиять
         return p / count, s / count
 
     def parse_articles(self, data: Any) -> list[str]:

@@ -37,7 +37,7 @@ class PriceBaseSource(ABC):
         """
 
     @abstractmethod
-    def calculate_normalized_ma(self, prices: list[float])-> float:
+    def calculate_normalized_ma(self, prices: list[float]) -> float:
         """
         На вход подаются цены для расчета MA в порядке возрастания timestamp.
         Вернет нормализованный сигнал тренда.

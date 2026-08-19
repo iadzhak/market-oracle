@@ -3,11 +3,12 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from sqlmodel import SQLModel
 
-from .database import engine, Session
-from .models import *
 from .constants import SOURCES
-from .sources import CCXTPriceGetter, NewsApiGetter, NewsBaseSource, PriceBaseSource, FakeNewsApiGetter
+from .database import Session, engine
+from .models import *
 from .settings import conf
+from .sources import (CCXTPriceGetter, FakeNewsApiGetter, NewsApiGetter,
+                      NewsBaseSource, PriceBaseSource)
 from .utils import DataProcessor
 
 
@@ -20,7 +21,8 @@ async def setup_db():
 
 
 def get_news_getter() -> NewsBaseSource:
-    return FakeNewsApiGetter()
+    if conf.NEWS_FAKER:
+        return FakeNewsApiGetter()
     return NewsApiGetter(
         base_url=conf.NEWS_API_URL,
         api_key=conf.NEWS_API_KEY,

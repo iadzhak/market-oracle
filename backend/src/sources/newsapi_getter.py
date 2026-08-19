@@ -40,7 +40,7 @@ class NewsApiGetter(NewsBaseSource):
             s += testimonial.sentiment.subjectivity
             count += 1
         if count == 0:
-            return 0.5, 0.5  #  вернем средние значения чтобы не сильно влиять
+            return 0.5, 0.5  # вернем средние значения чтобы не сильно влиять
         return p / count, s / count
 
     def parse_articles(self, data: Any) -> list[str]:

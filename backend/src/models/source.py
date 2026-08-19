@@ -1,8 +1,9 @@
-from sqlalchemy.dialects import sqlite, postgresql
+from sqlalchemy.dialects import postgresql, sqlite
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import Field, Relationship
 
 from .base import Base
+
 
 class Source(Base, table=True):
     __tablename__ = 'sources'

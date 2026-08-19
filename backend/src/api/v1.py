@@ -1,11 +1,10 @@
 from fastapi import APIRouter
-from pydantic import BaseModel
 
-from ..models import Forecast, RawData
-from ..settings import conf
-from ..dependencies import SessionDep, DataProcessorDep
+from ..constants import SOURCE_BINANCE, SOURCE_NEWSAPI
 from ..core import Oracle
-from ..constants import SOURCE_NEWSAPI, SOURCE_BINANCE
+from ..dependencies import DataProcessorDep, SessionDep
+from ..models import Forecast, ForecastResponse, RawData
+from ..settings import conf
 
 router = APIRouter(prefix='/api')
 
@@ -13,14 +12,6 @@ router = APIRouter(prefix='/api')
 @router.get('/tokens')
 async def tokens() -> list[str]:
     return conf.TOKENS
-
-
-
-
-class ForecastResponse(BaseModel):
-    forecast: Forecast
-    error_raito: float
-    contributions: list[float]
 
 
 @router.get('/tokens/{token}')
@@ -67,5 +58,7 @@ async def token_info(token: str, session: SessionDep, data_processor: DataProces
             print('Пора на тренировку')
             pass
     error_raito = await Forecast.get_error_raito(session, token)
-    contributions = oracle.contributions([[forecast.price_ma_ratio, forecast.news_polarity, forecast.news_subjectivity]])
+    contributions = oracle.contributions(
+        [[forecast.price_ma_ratio, forecast.news_polarity, forecast.news_subjectivity]]
+    )
     return ForecastResponse(forecast=forecast, error_raito=error_raito, contributions=list(contributions))

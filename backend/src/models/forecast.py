@@ -1,17 +1,11 @@
 import datetime as dt
-from enum import StrEnum
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import Field, Relationship
 
+from ..constants import FRESH_DELTA_MINUTES
 from .base import Base, DateTimeNowField
-from ..constants import FRESH_DELTA_MINUTES, MIN_CONFIDENCE, MAX_CONFIDENCE
-
-
-class ForecastType(StrEnum):
-    UP = "up"
-    DOWN = "down"
 
 
 class Forecast(Base, table=True):
@@ -51,6 +45,8 @@ class Forecast(Base, table=True):
         stmt = select(cls).where(cls.token == token, cls.target.is_not(None), cls.actual.is_not(None))
         result = await session.execute(stmt)
         forecasts = result.scalars().all()
+        if len(forecasts) == 0:
+            return 0
         wrong = 0
         for forecast in forecasts:
             if forecast.target != forecast.actual:
