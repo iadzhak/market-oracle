@@ -8,6 +8,9 @@ from .base import NewsBaseSource
 
 
 class FakeNewsApiGetter(NewsBaseSource):
+    id = 'fake-news'
+    type = 'Фейковые новости'
+    url = 'https://faker.readthedocs.io/'
 
     def __init__(self) -> None:
         self.fake = Faker()

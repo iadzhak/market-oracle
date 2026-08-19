@@ -49,3 +49,11 @@ class DataProcessor:
         news_p, news_s = self.news_getter.calculate_news_sentiment(news_descriptions)
 
         return last_close, ma_signal, news_p, news_s
+
+    @property
+    def price_getter_id(self) -> str:
+        return self.price_getter.id
+
+    @property
+    def news_getter_id(self) -> str:
+        return self.news_getter.id

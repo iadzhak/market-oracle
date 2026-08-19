@@ -1,5 +1,4 @@
 import datetime as dt
-from typing import Optional
 
 from sqlalchemy import JSON, Column
 from sqlmodel import Field, Relationship
@@ -14,7 +13,7 @@ class RawData(Base, table=True):
     source_id: str = Field(foreign_key='sources.id')
     forecast_id: int = Field(foreign_key='forecasts.id')
     fetched_at: dt.datetime = Field(default_factory=lambda: dt.datetime.now(dt.timezone.utc))
-    payload: Optional[dict | list] = Field(
+    payload: dict | list | None = Field(
         default=None,
         sa_column=Column(JSON, nullable=True)
     )

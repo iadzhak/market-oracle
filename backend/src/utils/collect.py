@@ -5,7 +5,6 @@ import itertools
 from sqlalchemy.ext.asyncio import AsyncSession
 from tqdm import tqdm
 
-from ..constants import SOURCE_BINANCE, SOURCE_NEWSAPI
 from ..models import Forecast, RawData
 from ..sources import NewsBaseSource, PriceBaseSource
 from .data import DataProcessor
@@ -41,13 +40,13 @@ async def collect(
             created_at=date
         )
         ohlcv = RawData(
-            source_id=SOURCE_BINANCE,
+            source_id=data_processor.price_getter_id,
             fetched_at=date,
             payload=ohlcv_raw,
             forecast=forecast
         )
         news = RawData(
-            source_id=SOURCE_NEWSAPI,
+            source_id=data_processor.news_getter_id,
             fetched_at=date,
             payload=news_raw,
             forecast=forecast

@@ -7,7 +7,9 @@ from .base import PriceBaseSource
 
 
 class CCXTPriceGetter(PriceBaseSource):
-
+    id = 'binance'
+    type = 'Источник цен'
+    url = 'https://www.binance.com/'
     TIMEFRAME_1H = '1h'
 
     def __init__(self, exchange_id: str, retries: int = 3, delay: int = 1000) -> None:

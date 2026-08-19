@@ -1,10 +1,10 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, BackgroundTasks
 
-from ..constants import SOURCE_BINANCE, SOURCE_NEWSAPI
 from ..core import Oracle
 from ..dependencies import DataProcessorDep, SessionDep
 from ..models import Forecast, ForecastResponse, RawData
 from ..settings import conf
+from ..tasks import perform_partial_fit
 
 router = APIRouter(prefix='/api')
 
@@ -15,7 +15,12 @@ async def tokens() -> list[str]:
 
 
 @router.get('/tokens/{token}')
-async def token_info(token: str, session: SessionDep, data_processor: DataProcessorDep):
+async def token_info(
+        token: str,
+        session: SessionDep,
+        data_processor: DataProcessorDep,
+        background_tasks: BackgroundTasks
+) -> ForecastResponse:
     token = token.lower()
     forecast = await Forecast.get_fresh_forecast(session, token)
     oracle = Oracle(token)
@@ -40,23 +45,20 @@ async def token_info(token: str, session: SessionDep, data_processor: DataProces
         raw_data = [
             RawData(
                 forecast=forecast,
-                source_id=SOURCE_BINANCE,
+                source_id=data_processor.price_getter_id,
                 payload=ohlcv_raw
             ),
             RawData(
                 forecast=forecast,
-                source_id=SOURCE_NEWSAPI,
+                source_id=data_processor.news_getter_id,
                 payload=news_raw
             )
         ]
         session.add(forecast)
         session.add_all(raw_data)
         await session.commit()
-        # check is_tarin raito > 5 then make train task
-        not_trained = await Forecast.get(session=session, token=token, is_trained=False)
-        if len(not_trained) > 5:
-            print('Пора на тренировку')
-            pass
+        # add background task for partial fit
+        background_tasks.add_task(perform_partial_fit, token, session, data_processor)
     error_raito = await Forecast.get_error_raito(session, token)
     contributions = oracle.contributions(
         [[forecast.price_ma_ratio, forecast.news_polarity, forecast.news_subjectivity]]

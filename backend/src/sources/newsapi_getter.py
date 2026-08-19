@@ -8,6 +8,9 @@ from .base import NewsBaseSource
 
 
 class NewsApiGetter(NewsBaseSource):
+    id = 'newsapi'
+    type = 'Источник новостей'
+    url = 'https://newsapi.org/'
 
     def __init__(self, base_url: str, api_key: str, news_url: str) -> None:
         self.client = httpx.AsyncClient(

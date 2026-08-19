@@ -16,11 +16,11 @@ class MODES(StrEnum):
 
 
 async def main(args):
-    await setup_db()
+    price_getter = get_price_getter()
+    news_getter = get_news_getter()
+    await setup_db([price_getter.info(), news_getter.info()])
     async with Session() as session:
         if args.mode == MODES.COLLECT:
-            price_getter = get_price_getter()
-            news_getter = get_news_getter()
             now = dt.datetime.now()
             dates = [now - dt.timedelta(days=x) for x in range(args.days + 2, 2, -1)]
             await collect(

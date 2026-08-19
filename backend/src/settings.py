@@ -17,6 +17,7 @@ class Settings(BaseSettings):
     DEFAULT_MODEL_NAME: str = 'default'
 
     DELTA_DAYS_PREDICT: int = 1
+    FRESH_DELTA_MINUTES: int = 1  # 60
 
 
 conf = Settings()

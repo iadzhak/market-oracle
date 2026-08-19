@@ -4,7 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import Field, Relationship
 
-from ..constants import FRESH_DELTA_MINUTES
+from ..settings import conf
 from .base import Base, DateTimeNowField
 
 
@@ -34,7 +34,7 @@ class Forecast(Base, table=True):
     @classmethod
     async def get_fresh_forecast(cls, session: AsyncSession, token: str):
         now = dt.datetime.now(dt.timezone.utc)
-        some_time_ago = now - dt.timedelta(minutes=FRESH_DELTA_MINUTES)
+        some_time_ago = now - dt.timedelta(minutes=conf.FRESH_DELTA_MINUTES)
         stmt = select(cls).where(cls.token == token, cls.created_at >= some_time_ago)
         result = await session.execute(stmt)
         return result.scalars().first()
@@ -52,3 +52,11 @@ class Forecast(Base, table=True):
             if forecast.target != forecast.actual:
                 wrong += 1
         return wrong / len(forecasts)
+
+    @classmethod
+    async def get_not_trained(cls, session: AsyncSession, token: str):
+        token = token.upper()
+        cutoff = dt.datetime.now() - dt.timedelta(days=1)
+        stmt = select(cls).where(cls.token == token, cls.is_trained.is_(False), cls.created_at < cutoff)
+        result = await session.execute(stmt)
+        return result.scalars().all()

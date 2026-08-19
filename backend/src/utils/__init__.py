@@ -1,4 +1,4 @@
-__all__ = ['collect', 'perform_train', 'DataProcessor']
+__all__ = ['DataProcessor', 'collect', 'perform_train']
 
 from .collect import collect
 from .data import DataProcessor

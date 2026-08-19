@@ -1,4 +1,4 @@
-__all__ = ['PriceBaseSource', 'NewsBaseSource', 'CCXTPriceGetter', 'NewsApiGetter', 'FakeNewsApiGetter']
+__all__ = ['CCXTPriceGetter', 'FakeNewsApiGetter', 'NewsApiGetter', 'NewsBaseSource', 'PriceBaseSource']
 
 from .base import NewsBaseSource, PriceBaseSource
 from .ccxt_getter import CCXTPriceGetter
